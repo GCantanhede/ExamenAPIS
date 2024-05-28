@@ -1,0 +1,7 @@
+<h1>Pokemon: {{this.id}}</h1>
+<h1>Habilitats:</h1>
+<div *ngFor="let habilities of habilitats">
+  <p><b>{{habilities.ability.name}}</b></p>
+</div>
+
+<router-outlet></router-outlet>
