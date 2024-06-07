@@ -21,34 +21,43 @@ import {
 
 export class HomeGuilhermeCantanhedeComponent {
   attack: any
+  url: String | undefined
   id: any
   image = ''
   habilitats: any
+  message: string|undefined = ''
   private promisePokemonAtack: any;
   protected getPokemonAtack: () => void;
 
   constructor(private http: HttpClient) {
 
-    var promisePokemonAtack = new Promise((resolve, reject) => {
-
-      var url = 'https://pokeapi.co/api/v2/pokemon/' + this.id + '/'
-
-      this.http.get<any>(url).subscribe({
-        next: (data) => {
-          resolve(data)
-        },
-        error: (err) => {
-          reject(err)
-        },
-        complete: () => {
-        }
-      })
-    })
-
     this.getPokemonAtack = () => {
 
       // @ts-ignore
       this.id = document.getElementById('idPoke').value
+
+      this.url = 'https://pokeapi.co/api/v2/pokemon/' + this.id + '/'
+
+      var promisePokemonAtack = new Promise((resolve, reject) => {
+
+        // @ts-ignore
+        this.http.get<any>(this.url).subscribe({
+          next: (data: any) => {
+            if (data.stats[0].base_stat < 50) {
+              this.message = 'Promesa rebutjada! El pokemon ' + this.id + ' té menys de 50 d\'atac. Atac del Pokémon: '  + data.stats[0].base_stat
+              reject(data)
+            }else{
+              this.message = 'Promesa aceptada! El pokemon ' + this.id + ' té más de 50 d\'atac. Atac del Pokémon: ' + data.stats[0].base_stat
+              resolve(data)
+            }
+          },
+          error: (err) => {
+            reject(err)
+          },
+          complete: () => {
+          }
+        })
+      })
 
       promisePokemonAtack.then((data: any) => {
           this.attack = data.stats[0].base_stat
@@ -56,6 +65,10 @@ export class HomeGuilhermeCantanhedeComponent {
           this.habilitats = data.abilities
           console.log(this.attack)
         }).catch((err: any) => {
+        this.attack = err.stats[0].base_stat
+        this.image = err.sprites.front_default
+        this.habilitats = err.abilities
+        console.log(this.attack)
           console.log(err)}).finally(() => {
           console.log('Finalizado')
         })

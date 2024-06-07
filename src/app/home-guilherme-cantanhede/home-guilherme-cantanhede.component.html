@@ -4,8 +4,7 @@
   <button (click)="this.getPokemonAtack()">Buscar</button>
 </div>
 <div class="resposta">
-  <p *ngIf="this.attack > 35" class="aceptada">Promesa rebutjada! El pokemon {{this.id}} té menys de 50 d'atac. Atac del Pokémon: {{this.attack}}</p>
-  <p *ngIf="this.attack <= 35" class="rebutjada">Promesa aceptada! El pokemon {{this.id}} té más de 50 d'atac. Atac del Pokémon: {{this.attack}}</p>
+  <p>{{this.message}}</p>
   <img *ngIf="this.image != ''" [src]="this.image" alt="Pokemon">
 </div>
 <div>
